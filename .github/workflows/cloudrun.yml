@@ -20,10 +20,11 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          gcloud auth configure-docker
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/${{ secrets.GCP_IMAGE }} .
-          docker push gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/${{ secrets.GCP_IMAGE }}
-
+            echo "${{ secrets.GCP_CREDENTIALS }}" | gcloud auth activate-service-account --key-file=-
+            gcloud auth configure-docker
+            docker build -t gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/${{ secrets.GCP_IMAGE }} .
+            docker push gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/${{ secrets.GCP_IMAGE }}
+          
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ secrets.GCP_SERVICE_NAME }} \
