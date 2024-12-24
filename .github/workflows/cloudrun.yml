@@ -20,7 +20,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          echo "${{ secrets.GCP_CREDENTIALS }}" > key.json
+          printf '%s' "${{ secrets.GCP_CREDENTIALS }}" > key.json
           gcloud auth activate-service-account --key-file=key.json
           gcloud auth configure-docker
           docker build -t gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/${{ secrets.GCP_IMAGE }} .
